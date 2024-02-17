@@ -1,0 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement; // Necesario para cargar escenas
+
+public class JugadorController : MonoBehaviour
+{
+    private Rigidbody rb;
+
+    public float velocidad;
+    private int contador;
+    public Text textoContador, textoGanar, textoTemporizador;
+
+    public float tiempoInicial = 60.0f; // Tiempo inicial en segundos
+    private float tiempoRestante; // Tiempo restante en segundos
+    private bool juegoTerminado = false; // Indica si el juego ha terminado
+
+    public ControladorJuego controladorJuego; // Referencia al controlador de juego
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+
+        contador = 0;
+        setTextoContador();
+        textoGanar.text = "";
+
+        tiempoRestante = tiempoInicial;
+
+        textoTemporizador = GameObject.Find("TextoTemporizador").GetComponent<Text>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        float movimientoH = Input.GetAxis("Horizontal");
+        float movimientoV = Input.GetAxis("Vertical");
+
+        Vector3 movimiento = new Vector3(movimientoH, 0.0f, movimientoV);
+        rb.AddForce(movimiento * velocidad);
+
+
+        if (!juegoTerminado)
+        {
+            tiempoRestante -= Time.deltaTime;
+
+            if (tiempoRestante <= 0)
+            {
+                juegoTerminado = true;
+                textoGanar.text = "¡Perdiste!";
+            }
+        }
+        // Actualiza el texto del temporizador
+        textoTemporizador.text = "Tiempo restante: " + Mathf.Round(tiempoRestante).ToString() + "s";
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Coleccionable"))
+
+        {
+            other.gameObject.SetActive(false);
+            contador = contador + 1;
+            setTextoContador();
+
+            if (contador >= 12)
+            {
+                textoGanar.text = "¡Ganaste!";
+
+                // Aquí se comprueba si se han recolectado todos los objetos
+                if (controladorJuego != null)
+                {
+                    controladorJuego.CargarSiguienteEscena(); // Llama al método para cargar la siguiente escena
+                }
+                else
+                {
+                    Debug.LogWarning("No se ha asignado un objeto de control de juego.");
+                }
+
+            }
+
+        }
+    }
+
+    void setTextoContador()
+    {
+        textoContador.text = "Contador: " + contador.ToString();
+        
+
+      
+    }
+
+
+
+}

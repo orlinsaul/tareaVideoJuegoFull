@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CamaraController : MonoBehaviour
+{
+    public GameObject jugador;
+    private Vector3 offset;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        offset = transform.position - jugador.transform.position;
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        transform.position = jugador.transform.position + offset;
+
+    }
+}
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class ControladorJuego : MonoBehaviour
+{
+    public string nombreProximaEscena;
+
+    // Método para cargar la siguiente escena
+    public void CargarSiguienteEscena()
+    {
+        SceneManager.LoadScene(nombreProximaEscena);
+      
+    }
+
+   public void CargarControles()
+    {
+        SceneManager.LoadScene("controlesDelJuego");
+    }
+
+    
+
+
+
+    public void Salir()
+    {
+        Application.Quit();
+
+    }
+        // Start is called before the first frame update
+        void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
